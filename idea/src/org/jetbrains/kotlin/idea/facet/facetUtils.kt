@@ -307,8 +307,8 @@ fun parseCompilerArgumentsToFacet(
     val compilerArgumentsClass = kotlinFacet.configuration.settings.compilerArguments?.javaClass ?: return
     val currentArgumentsBean = compilerArgumentsClass.newInstance()
     val defaultArgumentsBean = compilerArgumentsClass.newInstance()
-    parseCommandLineArguments(defaultArguments, defaultArgumentsBean)
-    parseCommandLineArguments(arguments, currentArgumentsBean)
+    parseCommandLineArgumentsWithDefaults(defaultArguments, defaultArgumentsBean)
+    parseCommandLineArgumentsWithDefaults(arguments, currentArgumentsBean)
     applyCompilerArgumentsToFacet(currentArgumentsBean, defaultArgumentsBean, kotlinFacet, modelsProvider)
 }
 
@@ -352,7 +352,7 @@ fun applyCompilerArgumentsToFacet(
 
         val additionalArgumentsString = with(compilerArguments::class.java.newInstance()) {
             copyFieldsSatisfying(compilerArguments, this) { exposeAsAdditionalArgument(it) && it.name !in ignoredFields }
-            ArgumentUtils.convertArgumentsToStringList(this).joinToString(separator = " ") {
+            ArgumentUtils.convertArgumentsToStringListIgnoreDefaults(this).joinToString(separator = " ") {
                 if (StringUtil.containsWhitespaces(it) || it.startsWith('"')) {
                     StringUtil.wrapWithDoubleQuote(StringUtil.escapeQuotes(it))
                 } else it
