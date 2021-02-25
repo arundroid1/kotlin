@@ -36,8 +36,10 @@ abstract class AbstractFirUseSiteMemberScope(
         val overrideCandidates = mutableSetOf<FirFunctionSymbol<*>>()
         declaredMemberScope.processFunctionsByName(name) { symbol ->
             if (symbol.isStatic) return@processFunctionsByName
-            val directOverridden = computeDirectOverridden(symbol)
-            this@AbstractFirUseSiteMemberScope.directOverriddenFunctions[symbol] = directOverridden
+            if (directOverriddenFunctions[symbol] == null) {
+                val directOverridden = computeDirectOverridden(symbol)
+                directOverriddenFunctions[symbol] = directOverridden
+            }
             overrideCandidates += symbol
             add(symbol)
         }
