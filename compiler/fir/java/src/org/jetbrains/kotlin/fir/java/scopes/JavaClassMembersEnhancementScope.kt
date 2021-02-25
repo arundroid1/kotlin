@@ -14,7 +14,6 @@ import org.jetbrains.kotlin.fir.resolve.substitution.ConeSubstitutor
 import org.jetbrains.kotlin.fir.scopes.FirTypeScope
 import org.jetbrains.kotlin.fir.scopes.ProcessorAction
 import org.jetbrains.kotlin.fir.symbols.impl.*
-import org.jetbrains.kotlin.fir.types.*
 import org.jetbrains.kotlin.name.Name
 
 class JavaClassMembersEnhancementScope(
@@ -34,7 +33,10 @@ class JavaClassMembersEnhancementScope(
         useSiteMemberScope.processPropertiesByName(name) process@{ original ->
             val enhancedPropertySymbol = signatureEnhancement.enhancedProperty(original, name)
             val originalFir = original.fir
-            if (originalFir is FirProperty && enhancedPropertySymbol is FirPropertySymbol) {
+            if (originalFir is FirProperty &&
+                enhancedPropertySymbol is FirPropertySymbol &&
+                overriddenProperties[enhancedPropertySymbol] == null
+            ) {
                 val enhancedProperty = enhancedPropertySymbol.fir
                 overriddenProperties[enhancedPropertySymbol] =
                     originalFir
@@ -55,9 +57,11 @@ class JavaClassMembersEnhancementScope(
             val enhancedFunctionSymbol = enhancedFunction?.symbol ?: symbol
 
             if (enhancedFunctionSymbol is FirNamedFunctionSymbol) {
-                overriddenFunctions[enhancedFunctionSymbol] = original.fir
-                    .overriddenMembers(enhancedFunctionSymbol.fir.name)
-                    .mapNotNull { it.symbol as? FirNamedFunctionSymbol }
+                if (overriddenFunctions[enhancedFunctionSymbol] == null) {
+                    overriddenFunctions[enhancedFunctionSymbol] = original.fir
+                        .overriddenMembers(enhancedFunctionSymbol.fir.name)
+                        .mapNotNull { it.symbol as? FirNamedFunctionSymbol }
+                }
                 processor(enhancedFunctionSymbol)
             }
         }
