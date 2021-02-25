@@ -7,6 +7,8 @@ package org.jetbrains.kotlin.idea.fir.low.level.api
 
 import com.intellij.openapi.module.Module
 import com.intellij.psi.JavaDirectoryService
+import com.intellij.psi.PsiClass
+import com.intellij.psi.PsiElement
 import com.intellij.psi.PsiPackage
 import com.intellij.psi.search.GlobalSearchScope
 import com.intellij.psi.search.PackageScope
@@ -14,6 +16,7 @@ import com.intellij.psi.search.SearchScope
 import com.intellij.psi.search.searches.ClassInheritorsSearch
 import org.jetbrains.kotlin.analyzer.ModuleInfo
 import org.jetbrains.kotlin.asJava.KotlinAsJavaSupport
+import org.jetbrains.kotlin.asJava.namedUnwrappedElement
 import org.jetbrains.kotlin.asJava.toLightClass
 import org.jetbrains.kotlin.fir.FirElement
 import org.jetbrains.kotlin.fir.FirSession
@@ -28,10 +31,11 @@ import org.jetbrains.kotlin.fir.visitors.FirTransformer
 import org.jetbrains.kotlin.fir.visitors.compose
 import org.jetbrains.kotlin.idea.caches.project.ModuleSourceInfo
 import org.jetbrains.kotlin.idea.caches.project.PlatformModuleInfo
-import org.jetbrains.kotlin.idea.search.getKotlinFqName
+import org.jetbrains.kotlin.idea.util.classIdIfNonLocal
 import org.jetbrains.kotlin.idea.util.module
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.psi.KtClass
+import org.jetbrains.kotlin.psi.KtClassOrObject
 import org.jetbrains.kotlin.resolve.jvm.KotlinJavaPsiFacade
 import org.jetbrains.kotlin.types.typeUtil.closure
 
@@ -78,7 +82,7 @@ class FirIdeSealedHierarchyProcessor(
             val module = sealedKtClass.module ?: return
             val moduleInfo = regularClass.session.moduleInfo ?: return
 
-            val modulesScope = moduleInfo.listCommonModulesIfAny().toMutableList()
+            val modulesScope = moduleInfo.listCommonModulesIfAny().toMutableList() // TODO remove MPP support
                 .apply { add(module) }
                 .map { it.moduleScope }
 
@@ -103,13 +107,35 @@ class FirIdeSealedHierarchyProcessor(
 
             val query = ClassInheritorsSearch.search(searchParameters)
             val subclasses = query
-                .mapNotNull { it.getKotlinFqName() }
-                .map { ClassId.topLevel(it) }
+                .mapNotNull { psi -> psi.classIdIfNonLocal() }
                 .toMutableList()
             data[regularClass] = subclasses
         }
     }
 }
+
+private fun PsiElement.classIdIfNonLocal(): ClassId? = when (val element = namedUnwrappedElement) {
+    is PsiClass -> element.classIdIfNonLocal()
+    is KtClassOrObject -> element.classIdIfNonLocal()
+    else -> null
+}
+
+
+/*
+fun PsiClass.getQualifiedName(): ClassId? {
+    if (this is KtLightClass) {
+        return this.kotlinOrigin?.classIdIfNonLocal()
+    }
+    val packageName = (containingFile as? PsiJavaFile)?.packageName ?: return null
+    val packageFqName = FqName(packageName)
+
+    val classesNames = parentsOfType<KtDeclaration>().map { it.name }.toList().asReversed()
+    if (classesNames.any { it == null }) return null
+    return ClassId(packageFqName, FqName(classesNames.joinToString(separator = ".")), */
+/*local=*//*
+false)
+}
+*/
 
 val ModuleInfo.implementedDescriptors: List<ModuleInfo>
     get() {
