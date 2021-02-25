@@ -24,9 +24,9 @@ class FirClassUseSiteMemberScope(
         val seen = mutableSetOf<FirVariableSymbol<*>>()
         declaredMemberScope.processPropertiesByName(name) l@{
             if (it.isStatic) return@l
-            if (it is FirPropertySymbol) {
+            if (it is FirPropertySymbol && directOverriddenProperties[it] == null) {
                 val directOverridden = computeDirectOverridden(it.fir)
-                this@FirClassUseSiteMemberScope.directOverriddenProperties[it] = directOverridden
+                directOverriddenProperties[it] = directOverridden
             }
             seen += it
             processor(it)
