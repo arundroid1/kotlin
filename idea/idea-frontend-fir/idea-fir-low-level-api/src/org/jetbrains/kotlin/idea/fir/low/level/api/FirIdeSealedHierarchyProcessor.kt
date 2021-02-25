@@ -114,29 +114,6 @@ class FirIdeSealedHierarchyProcessor(
     }
 }
 
-private fun PsiElement.classIdIfNonLocal(): ClassId? = when (val element = namedUnwrappedElement) {
-    is PsiClass -> element.classIdIfNonLocal()
-    is KtClassOrObject -> element.classIdIfNonLocal()
-    else -> null
-}
-
-
-/*
-fun PsiClass.getQualifiedName(): ClassId? {
-    if (this is KtLightClass) {
-        return this.kotlinOrigin?.classIdIfNonLocal()
-    }
-    val packageName = (containingFile as? PsiJavaFile)?.packageName ?: return null
-    val packageFqName = FqName(packageName)
-
-    val classesNames = parentsOfType<KtDeclaration>().map { it.name }.toList().asReversed()
-    if (classesNames.any { it == null }) return null
-    return ClassId(packageFqName, FqName(classesNames.joinToString(separator = ".")), */
-/*local=*//*
-false)
-}
-*/
-
 val ModuleInfo.implementedDescriptors: List<ModuleInfo>
     get() {
         val moduleInfo = this

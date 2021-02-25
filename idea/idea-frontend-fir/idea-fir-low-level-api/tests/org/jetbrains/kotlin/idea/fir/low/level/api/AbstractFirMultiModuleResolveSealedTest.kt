@@ -9,7 +9,8 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import com.intellij.openapi.vfs.VirtualFileManager
 import com.intellij.psi.PsiManager
-import org.jetbrains.kotlin.fir.render
+import org.jetbrains.kotlin.executeOnPooledThreadInReadAction
+import org.jetbrains.kotlin.fir.declarations.*
 import org.jetbrains.kotlin.idea.fir.low.level.api.api.getOrBuildFir
 import org.jetbrains.kotlin.idea.fir.low.level.api.api.getResolveState
 import org.jetbrains.kotlin.idea.jsonUtils.getString
@@ -21,12 +22,12 @@ import org.jetbrains.kotlin.test.util.KtTestUtil
 import java.io.File
 import java.nio.file.Paths
 
-abstract class AbstractFirMultiModuleLazyResolveTest : AbstractMultiModuleTest() {
+abstract class AbstractFirMultiModuleResolveSealedTest : AbstractMultiModuleTest() {
     override fun getTestDataPath(): String =
         "${KtTestUtil.getHomeDirectory()}/idea/idea-frontend-fir/idea-fir-low-level-api/testdata/multiModuleResolveSealed/"
 
     fun doTest(path: String) {
-        val testStructure = MultiModuleTestProjectStructure.fromTestProjectStructure(TestProjectStructureReader.read(Paths.get(path)))
+        val testStructure = MultiModuleTestProjectStructureForSealed.fromTestProjectStructure(TestProjectStructureReader.read(Paths.get(path)))
         val modulesByNames = testStructure.modules.associate { moduleData ->
             moduleData.name to module(moduleData.name)
         }
@@ -40,15 +41,22 @@ abstract class AbstractFirMultiModuleLazyResolveTest : AbstractMultiModuleTest()
         val fileToAnalysePath = moduleToResolve.sourceRoots.first().url + "/" + testStructure.fileToResolve.relativeFilePath
 
         val virtualFileToAnalyse = VirtualFileManager.getInstance().findFileByUrl(fileToAnalysePath)
-            ?: error("File ${testStructure.fileToResolve.filePath} not found")
+                ?: error("File ${testStructure.fileToResolve.filePath} not found")
         val ktFileToAnalyse = PsiManager.getInstance(project).findFile(virtualFileToAnalyse) as KtFile
         val resolveState = ktFileToAnalyse.getResolveState()
 
         val fails = testStructure.fails
 
         try {
-            val fir = ktFileToAnalyse.getOrBuildFir(resolveState)
-            KotlinTestUtils.assertEqualsToFile(File("$path/expected.txt"), fir.render())
+            val inheritors = executeOnPooledThreadInReadAction {
+                val fir = ktFileToAnalyse.getOrBuildFir(resolveState)
+                val declaration = (fir as FirFile).declarations.firstOrNull { it is FirRegularClass && it.isSealed } as? FirRegularClass
+                declaration?.sealedInheritors
+            }
+
+            val toString = inheritors?.map { it.asString() }?.toList()
+            KotlinTestUtils.assertEqualsToFileIgnoreOrder(File("$path/expected.txt"), toString!!)
+
         } catch (e: Throwable) {
             if (!fails) throw e
             return
@@ -59,13 +67,13 @@ abstract class AbstractFirMultiModuleLazyResolveTest : AbstractMultiModuleTest()
     }
 }
 
-private data class FileToResolve(val moduleName: String, val relativeFilePath: String) {
+private data class FileToResolveForSealed(val moduleName: String, val relativeFilePath: String) {
     val filePath get() = "$moduleName/$relativeFilePath"
 
     companion object {
-        fun parse(json: JsonElement): FileToResolve {
+        fun parse(json: JsonElement): FileToResolveForSealed {
             require(json is JsonObject)
-            return FileToResolve(
+            return FileToResolveForSealed(
                 moduleName = json.getString("module"),
                 relativeFilePath = json.getString("file")
             )
@@ -73,19 +81,19 @@ private data class FileToResolve(val moduleName: String, val relativeFilePath: S
     }
 }
 
-private data class MultiModuleTestProjectStructure(
+private data class MultiModuleTestProjectStructureForSealed(
     val modules: List<TestProjectModule>,
-    val fileToResolve: FileToResolve,
+    val fileToResolve: FileToResolveForSealed,
     val fails: Boolean
 ) {
     companion object {
-        fun fromTestProjectStructure(testProjectStructure: TestProjectStructure): MultiModuleTestProjectStructure {
+        fun fromTestProjectStructure(testProjectStructure: TestProjectStructure): MultiModuleTestProjectStructureForSealed {
             val json = testProjectStructure.json
 
             val fails = if (json.has(FAILS_FIELD)) json.get(FAILS_FIELD).asBoolean else false
-            val fileToResolve = FileToResolve.parse(json.getAsJsonObject("fileToResolve"))
+            val fileToResolve = FileToResolveForSealed.parse(json.getAsJsonObject("fileToResolve"))
 
-            return MultiModuleTestProjectStructure(
+            return MultiModuleTestProjectStructureForSealed(
                 testProjectStructure.modules,
                 fileToResolve,
                 fails

@@ -1,8 +1,9 @@
-fun Y.test(): String? {
-    val a = when (this) {
-        is F -> 1
-        is G -> 2
-        else -> return null
+sealed class SealedClass
+class SealedInheritorA: SealedClass()
+class SealedInheritorB: SealedClass()
+
+fun test(x: SealedClass): Any = when (x) {
+        is SealedInheritorA -> TODO()
+        is SealedInheritorB -> TODO()
     }
-    return null
 }
