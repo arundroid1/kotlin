@@ -44,6 +44,7 @@ class JavaClassUseSiteMemberScope(
     private val typeParameterStack = klass.javaTypeParameterStack
     private val specialFunctions = hashMapOf<Name, Collection<FirNamedFunctionSymbol>>()
     private val accessorByGetterMap = hashMapOf<CallableId, FirAccessorSymbol>()
+    private val namesWithoutPotentialProperties = hashSetOf<Name>()
 
     override fun getCallableNames(): Set<Name> {
         return declaredMemberScope.getContainingCallableNamesIfPresent() + superTypesScope.getCallableNames()
@@ -190,6 +191,9 @@ class JavaClassUseSiteMemberScope(
     }
 
     override fun processFunctionsByName(name: Name, processor: (FirNamedFunctionSymbol) -> Unit) {
+        if (name in namesWithoutPotentialProperties) {
+            return super.processFunctionsByName(name, processor)
+        }
         val potentialPropertyNames = getPropertyNamesCandidatesByAccessorName(name)
 
         val renamedSpecialBuiltInNames = SpecialGenericSignatures.getBuiltinFunctionNamesByJvmName(name)
@@ -197,6 +201,7 @@ class JavaClassUseSiteMemberScope(
         if (potentialPropertyNames.isEmpty() && renamedSpecialBuiltInNames.isEmpty() &&
             !name.sameAsBuiltinMethodWithErasedValueParameters
         ) {
+            namesWithoutPotentialProperties += name
             return super.processFunctionsByName(name, processor)
         }
 
