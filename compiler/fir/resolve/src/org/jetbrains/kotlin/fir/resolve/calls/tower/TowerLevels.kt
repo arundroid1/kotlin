@@ -12,10 +12,10 @@ import org.jetbrains.kotlin.fir.dispatchReceiverClassOrNull
 import org.jetbrains.kotlin.fir.expressions.builder.buildResolvedQualifier
 import org.jetbrains.kotlin.fir.resolve.*
 import org.jetbrains.kotlin.fir.resolve.calls.*
+import org.jetbrains.kotlin.fir.resolve.inference.isFunctionalType
 import org.jetbrains.kotlin.fir.resolve.transformers.body.resolve.resultType
 import org.jetbrains.kotlin.fir.scopes.FirScope
-import org.jetbrains.kotlin.fir.scopes.ProcessorAction
-import org.jetbrains.kotlin.fir.scopes.impl.FirDefaultStarImportingScope
+import org.jetbrains.kotlin.fir.scopes.impl.FirAbstractStarImportingScope
 import org.jetbrains.kotlin.fir.scopes.impl.importedFromObjectData
 import org.jetbrains.kotlin.fir.scopes.processClassifiersByName
 import org.jetbrains.kotlin.fir.symbols.AbstractFirBasedSymbol
@@ -225,10 +225,10 @@ class ScopeTowerLevel(
     }
 
     private fun shouldSkipCandidateWithInconsistentExtensionReceiver(candidate: FirCallableSymbol<*>): Boolean {
-        // Pre-check explicit extension receiver for default package top-level members
-        if (scope is FirDefaultStarImportingScope && extensionReceiver != null) {
+        // Pre-check explicit extension receiver for top-level members
+        if (scope is FirAbstractStarImportingScope && extensionReceiver != null) {
             val extensionReceiverType = extensionReceiver.type
-            if (extensionReceiverType is ConeClassLikeType) {
+            if (extensionReceiverType is ConeClassLikeType && !extensionReceiverType.isFunctionalType(session)) {
                 val declarationReceiverType = candidate.fir.receiverTypeRef?.coneType
                 if (declarationReceiverType is ConeClassLikeType) {
                     if (!AbstractTypeChecker.isSubtypeOf(

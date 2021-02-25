@@ -361,16 +361,16 @@ fun case_21() {
 // TESTCASE NUMBER: 22
 fun case_22(a: (() -> Unit)?) {
     if (a != null !is Boolean) {
-        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Unit")!><!UNSAFE_IMPLICIT_INVOKE_CALL!>a<!>()<!>
-        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Unit")!><!UNSAFE_IMPLICIT_INVOKE_CALL!>a<!>()<!>.equals(null)
-        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Unit")!><!UNSAFE_IMPLICIT_INVOKE_CALL!>a<!>()<!>.propT
-        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Unit")!><!UNSAFE_IMPLICIT_INVOKE_CALL!>a<!>()<!>.propAny
-        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Unit")!><!UNSAFE_IMPLICIT_INVOKE_CALL!>a<!>()<!>.propNullableT
-        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Unit")!><!UNSAFE_IMPLICIT_INVOKE_CALL!>a<!>()<!>.propNullableAny
-        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Unit")!><!UNSAFE_IMPLICIT_INVOKE_CALL!>a<!>()<!>.funT()
-        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Unit")!><!UNSAFE_IMPLICIT_INVOKE_CALL!>a<!>()<!>.funAny()
-        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Unit")!><!UNSAFE_IMPLICIT_INVOKE_CALL!>a<!>()<!>.funNullableT()
-        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Unit")!><!UNSAFE_IMPLICIT_INVOKE_CALL!>a<!>()<!>.funNullableAny()
+        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!><!INAPPLICABLE_CANDIDATE!>a<!>()<!>
+        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!><!INAPPLICABLE_CANDIDATE!>a<!>()<!>.equals(null)
+        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!><!INAPPLICABLE_CANDIDATE!>a<!>()<!>.propT
+        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!><!INAPPLICABLE_CANDIDATE!>a<!>()<!>.propAny
+        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!><!INAPPLICABLE_CANDIDATE!>a<!>()<!>.propNullableT
+        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!><!INAPPLICABLE_CANDIDATE!>a<!>()<!>.propNullableAny
+        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!><!INAPPLICABLE_CANDIDATE!>a<!>()<!>.funT()
+        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!><!INAPPLICABLE_CANDIDATE!>a<!>()<!>.funAny()
+        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!><!INAPPLICABLE_CANDIDATE!>a<!>()<!>.funNullableT()
+        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!><!INAPPLICABLE_CANDIDATE!>a<!>()<!>.funNullableAny()
     }
 }
 

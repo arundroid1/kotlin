@@ -406,7 +406,7 @@ fun case_21() {
 fun case_22(a: (() -> Unit)?) {
     var y = null
     if (a != null || y != a) {
-        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Unit")!><!UNSAFE_IMPLICIT_INVOKE_CALL!>a<!>()<!>
+        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!><!INAPPLICABLE_CANDIDATE!>a<!>()<!>
         <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Function0<kotlin.Unit>?")!>a<!><!UNSAFE_CALL!>.<!>equals(null)
         <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Function0<kotlin.Unit>?")!>a<!>.propT
         <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Function0<kotlin.Unit>?")!>a<!><!UNSAFE_CALL!>.<!>propAny
@@ -475,19 +475,19 @@ fun case_25(b: Boolean) {
 
     if (y !== null || x()!!.b != y) {
         if (x()!!.b != y) {
-            val z = <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!><!UNSAFE_IMPLICIT_INVOKE_CALL!>y<!>()<!>
+            val z = <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!><!INAPPLICABLE_CANDIDATE!>y<!>()<!>
 
             if (z != null) {
-                <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>? & <anonymous>")!>z<!>.a
-                <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>? & <anonymous>")!>z<!>.equals(null)
-                <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>? & <anonymous>")!>z<!>.propT
-                <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>? & <anonymous>")!>z<!>.propAny
-                <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>? & <anonymous>")!>z<!>.propNullableT
-                <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>? & <anonymous>")!>z<!>.propNullableAny
-                <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>? & <anonymous>")!>z<!>.funT()
-                <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>? & <anonymous>")!>z<!>.funAny()
-                <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>? & <anonymous>")!>z<!>.funNullableT()
-                <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>? & <anonymous>")!>z<!>.funNullableAny()
+                <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z<!>.<!UNRESOLVED_REFERENCE!>a<!>
+                <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z<!>.equals(null)
+                <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z<!>.propT
+                <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z<!>.propAny
+                <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z<!>.propNullableT
+                <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z<!>.propNullableAny
+                <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z<!>.funT()
+                <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z<!>.funAny()
+                <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z<!>.funNullableT()
+                <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z<!>.funNullableAny()
             }
         }
     }

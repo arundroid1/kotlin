@@ -67,7 +67,7 @@ fun case_3(b: Boolean) {
     val y = if (b) x else null
 
     if (false || false || false || false || y !== null) {
-        val z = <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!><!UNSAFE_IMPLICIT_INVOKE_CALL!>y<!>()<!>
+        val z = <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!><!INAPPLICABLE_CANDIDATE!>y<!>()<!>
         <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Function0<<anonymous>?>?")!>y<!><!UNSAFE_CALL!>.<!>equals(null)
         <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Function0<<anonymous>?>?")!>y<!>.propT
         <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Function0<<anonymous>?>?")!>y<!><!UNSAFE_CALL!>.<!>propAny
@@ -79,7 +79,7 @@ fun case_3(b: Boolean) {
         <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Function0<<anonymous>?>?")!>y<!>.funNullableAny()
 
         if (z != null || false) {
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>z<!><!UNSAFE_CALL!>.<!>a
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z<!>.<!UNRESOLVED_REFERENCE!>a<!>
         }
     }
 }
@@ -274,7 +274,7 @@ fun case_11(b: Boolean) {
     val y = if (b) x else null
 
     if (y === null && true) else {
-        val z = <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!><!UNSAFE_IMPLICIT_INVOKE_CALL!>y<!>()<!>
+        val z = <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!><!INAPPLICABLE_CANDIDATE!>y<!>()<!>
         <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Function0<<anonymous>?>?")!>y<!><!UNSAFE_CALL!>.<!>equals(null)
         <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Function0<<anonymous>?>?")!>y<!>.propT
         <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Function0<<anonymous>?>?")!>y<!><!UNSAFE_CALL!>.<!>propAny
@@ -288,7 +288,7 @@ fun case_11(b: Boolean) {
         if (z != null || b) {
 
         } else {
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>z<!>
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z<!>
         }
     }
 }

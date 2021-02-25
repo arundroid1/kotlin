@@ -422,7 +422,7 @@ fun case_21() {
 // TESTCASE NUMBER: 22
 fun case_22(a: (() -> Unit)?) {
     if (a != implicitNullableNothingProperty) {
-        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Unit")!><!UNSAFE_IMPLICIT_INVOKE_CALL!>a<!>()<!>
+        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!><!INAPPLICABLE_CANDIDATE!>a<!>()<!>
         <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Function0<kotlin.Unit>?")!>a<!><!UNSAFE_CALL!>.<!>equals(null)
         <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Function0<kotlin.Unit>?")!>a<!>.propT
         <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Function0<kotlin.Unit>?")!>a<!><!UNSAFE_CALL!>.<!>propAny
@@ -489,19 +489,19 @@ fun case_25(b: Boolean, z: Nothing?) {
     val y = if (b) x else z
 
     if (y !== z || y != implicitNullableNothingProperty) {
-        val z1 = <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!><!UNSAFE_IMPLICIT_INVOKE_CALL!>y<!>()<!>
+        val z1 = <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!><!INAPPLICABLE_CANDIDATE!>y<!>()<!>
 
         if (z1 != z && implicitNullableNothingProperty !== z1) {
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>z1<!><!UNSAFE_CALL!>.<!>a
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>z1<!><!UNSAFE_CALL!>.<!>equals(null)
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>z1<!>.propT
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>z1<!><!UNSAFE_CALL!>.<!>propAny
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>z1<!>.propNullableT
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>z1<!>.propNullableAny
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>z1<!>.funT()
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>z1<!><!UNSAFE_CALL!>.<!>funAny()
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>z1<!>.funNullableT()
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>z1<!>.funNullableAny()
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z1<!>.<!UNRESOLVED_REFERENCE!>a<!>
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z1<!>.equals(null)
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z1<!>.propT
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z1<!>.propAny
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z1<!>.propNullableT
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z1<!>.propNullableAny
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z1<!>.funT()
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z1<!>.funAny()
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z1<!>.funNullableT()
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z1<!>.funNullableAny()
         }
     }
 }
@@ -575,19 +575,19 @@ fun case_29(x: Boolean) {
     val y = if (x) z else null
 
     if (false || false || false || false || y !== v) {
-        val t = <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!><!UNSAFE_IMPLICIT_INVOKE_CALL!>y<!>()<!>
+        val t = <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!><!INAPPLICABLE_CANDIDATE!>y<!>()<!>
 
         if (z !== t || false) {
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>t<!><!UNSAFE_CALL!>.<!>a
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>t<!><!UNSAFE_CALL!>.<!>equals(null)
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>t<!>.propT
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>t<!><!UNSAFE_CALL!>.<!>propAny
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>t<!>.propNullableT
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>t<!>.propNullableAny
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>t<!>.funT()
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>t<!><!UNSAFE_CALL!>.<!>funAny()
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>t<!>.funNullableT()
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>t<!>.funNullableAny()
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>t<!>.<!UNRESOLVED_REFERENCE!>a<!>
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>t<!>.equals(null)
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>t<!>.propT
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>t<!>.propAny
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>t<!>.propNullableT
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>t<!>.propNullableAny
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>t<!>.funT()
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>t<!>.funAny()
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>t<!>.funNullableT()
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>t<!>.funNullableAny()
         }
     }
 }
@@ -994,7 +994,7 @@ fun case_57(a: (() -> Unit)) {
 
     if (a == z) {
         <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Function0<kotlin.Unit>")!>a<!>
-        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Function0<kotlin.Unit>")!>a<!>.<!UNRESOLVED_REFERENCE!>java<!>
+        <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Function0<kotlin.Unit>")!>a<!>.<!INAPPLICABLE_CANDIDATE!>java<!>
     }
 }
 
@@ -1008,7 +1008,7 @@ fun case_58(a: ((Float) -> Int?)?, b: Float?, z: Nothing?) {
         <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Float?")!>b<!>
         if (a != z) {
             <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Function1<kotlin.Float, kotlin.Int?>?")!>a<!>
-            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Function1<kotlin.Float, kotlin.Int?>?")!>a<!>.<!UNRESOLVED_REFERENCE!>java<!>
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Function1<kotlin.Float, kotlin.Int?>?")!>a<!><!UNSAFE_CALL!>.<!>java
         }
     }
 }
@@ -1054,10 +1054,10 @@ fun case_60(b: Boolean) {
     val y = if (b) x else nullableNothingProperty
 
     if (y != nullableNothingProperty) {
-        val z = <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!><!UNSAFE_IMPLICIT_INVOKE_CALL!>y<!>()<!>
+        val z = <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!><!INAPPLICABLE_CANDIDATE!>y<!>()<!>
 
         if (z == nullableNothingProperty) {
-            <!DEBUG_INFO_EXPRESSION_TYPE("<anonymous>?")!>z<!>
+            <!DEBUG_INFO_EXPRESSION_TYPE("kotlin.Nothing")!>z<!>
         }
     }
 }
