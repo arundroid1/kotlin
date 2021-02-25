@@ -83,6 +83,7 @@ class JavaClassUseSiteMemberScope(
 
         val fromSupertypes = superTypesScope.getProperties(name)
 
+        val newOverriddenProperties = hashMapOf<FirPropertySymbol, MutableList<FirPropertySymbol>>()
         for (propertyFromSupertype in fromSupertypes) {
             if (propertyFromSupertype is FirFieldSymbol) {
                 if (propertyFromSupertype.fir.name !in fieldNames) {
@@ -94,12 +95,15 @@ class JavaClassUseSiteMemberScope(
             val overrideInClass = propertyFromSupertype.createOverridePropertyIfExists(declaredMemberScope)
             when {
                 overrideInClass != null -> {
-                    directOverriddenProperties.getOrPut(overrideInClass) { mutableListOf() }.add(propertyFromSupertype)
+                    newOverriddenProperties.getOrPut(overrideInClass) { mutableListOf() }.add(propertyFromSupertype)
                     overrideByBase[propertyFromSupertype] = overrideInClass
                     processor(overrideInClass)
                 }
                 else -> processor(propertyFromSupertype)
             }
+        }
+        for ((property, directOverridden) in newOverriddenProperties) {
+            directOverriddenProperties[property] = directOverridden
         }
     }
 
