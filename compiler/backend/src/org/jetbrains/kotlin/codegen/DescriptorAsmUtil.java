@@ -232,9 +232,7 @@ public class DescriptorAsmUtil {
         int flags = getVisibilityAccessFlag(functionDescriptor, kind);
         flags |= getVarargsFlag(functionDescriptor);
         flags |= getDeprecatedAccessFlag(functionDescriptor);
-        if (deprecationResolver.isDeprecatedHidden(functionDescriptor) ||
-            isInlineWithReified(functionDescriptor) ||
-            functionDescriptor.isSuspend() && functionDescriptor.getVisibility().equals(DescriptorVisibilities.PRIVATE)) {
+        if (deprecationResolver.isDeprecatedHidden(functionDescriptor) || isInlineWithReified(functionDescriptor)) {
             flags |= ACC_SYNTHETIC;
         }
         return flags;
