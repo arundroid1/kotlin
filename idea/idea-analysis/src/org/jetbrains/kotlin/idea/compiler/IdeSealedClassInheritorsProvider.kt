@@ -18,16 +18,12 @@ import org.jetbrains.kotlin.analyzer.ModuleInfo
 import org.jetbrains.kotlin.asJava.KotlinAsJavaSupport
 import org.jetbrains.kotlin.asJava.toLightClass
 import org.jetbrains.kotlin.caches.resolve.KotlinCacheService
-import org.jetbrains.kotlin.caches.resolve.KotlinCacheService.CapabilitiesProvider
 import org.jetbrains.kotlin.codegen.JvmCodegenUtil
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
-import org.jetbrains.kotlin.descriptors.ModuleCapability
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.descriptors.containingPackage
 import org.jetbrains.kotlin.idea.caches.project.implementedDescriptors
 import org.jetbrains.kotlin.idea.caches.resolve.IdeaResolverForProject.Companion.PLATFORM_ANALYSIS_SETTINGS
-import org.jetbrains.kotlin.idea.caches.resolve.PlatformAnalysisSettings
-import org.jetbrains.kotlin.idea.caches.resolve.PlatformAnalysisSettingsImpl
 import org.jetbrains.kotlin.idea.caches.resolve.util.resolveToDescriptor
 import org.jetbrains.kotlin.idea.resolve.ResolutionFacade
 import org.jetbrains.kotlin.idea.util.module
@@ -95,15 +91,5 @@ object IdeSealedClassInheritorsProvider : SealedClassInheritorsProvider() {
 private fun getResolutionFacade(moduleDescriptor: ModuleDescriptor, project: Project): ResolutionFacade? {
     val analysisSettings = moduleDescriptor.getCapability(PLATFORM_ANALYSIS_SETTINGS) ?: return null
     val moduleInfo = moduleDescriptor.getCapability(ModuleInfo.Capability) ?: return null
-    return KotlinCacheService.getInstance(project).getResolutionFacadeByModuleInfo(moduleInfo, createProvider(analysisSettings))
-}
-
-private fun createProvider(settings: PlatformAnalysisSettings): CapabilitiesProvider {
-    return object : CapabilitiesProvider {
-        @Suppress("UNCHECKED_CAST")
-        override fun <T> getCapability(capability: ModuleCapability<T>): T? {
-            if (capability == PLATFORM_ANALYSIS_SETTINGS) return settings as T
-            return null
-        }
-    }
+    return KotlinCacheService.getInstance(project).getResolutionFacadeByModuleInfo(moduleInfo, analysisSettings)
 }
